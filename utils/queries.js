@@ -1,7 +1,6 @@
 var promise = require('bluebird');
 
 var options = {
-  // Initialization Options
   promiseLib: promise
 };
 
@@ -11,13 +10,13 @@ var db = pgp(connectionString);
 
 //Funções da tabela aluno
 function getAllAlunos(req, res, next) {
-    db.any('select * from Aluno')
+    db.any('select * from "Aluno"')
       .then(function (data) {
         res.status(200)
           .json({
             status: 'success',
             data: data,
-            message: 'Retrieved ALL Alunos'
+            message: 'Recuperou todos os alunos'
         });
     })
       .catch(function (err) {
@@ -27,13 +26,13 @@ function getAllAlunos(req, res, next) {
 
 function getAluno(req, res, next) {
     var AlunoID = parseInt(req.params.id);
-    db.one('select * from Aluno where id = $1', AlunoID)
+    db.one('select * from "Aluno" where id = $1', AlunoID)
       .then(function (data) {
         res.status(200)
           .json({
             status: 'success',
             data: data,
-            message: 'Retrieved ONE Aluno'
+            message: 'Recuperou um aluno'
         });
     })
       .catch(function (err) {
@@ -43,14 +42,14 @@ function getAluno(req, res, next) {
 
 function createAluno(req, res, next) {
     req.body.age = parseInt(req.body.age);
-    db.none('insert into Aluno(id, nome, id_Pai, id_Turma)' +
-        'values(${id}, ${nome}, ${id_Pai}, ${id_Turma})',
+    db.none('insert into "Aluno"(nome, "Id_Pai", "Id_Turma")' +
+        'values(${ ${nome}, ${Id_Pai}, ${Id_Turma})',
       req.body)
       .then(function () {
         res.status(200)
           .json({
             status: 'success',
-            message: 'Inserted one Aluno'
+            message: 'Inseriu um aluno'
         });
     })
       .catch(function (err) {
@@ -59,14 +58,14 @@ function createAluno(req, res, next) {
 }
 
 function updateAluno(req, res, next) {
-    db.none('update Aluno set nome=$1, id_Pai=$2, id_Turma=$3, where id=$1',
+    db.none('update "Aluno" set nome=$1, id_Pai=$2, id_Turma=$3, where id=$1',
       [parseInt(req.params.id),req.body.nome, 
         parseInt(req.body.id_Pai), parseInt(req.body.id_Turma),])
       .then(function () {
         res.status(200)
           .json({
             status: 'success',
-            message: 'Updated Aluno'
+            message: 'Atualizou aluno'
         });
     })
       .catch(function (err) {
@@ -77,13 +76,13 @@ function updateAluno(req, res, next) {
 
 function removeAluno(req, res, next) {
     var AlunoID = parseInt(req.params.id);
-    db.result('delete from Aluno where id = $1', AlunoID)
+    db.result('delete from "Aluno" where id = $1', AlunoID)
       .then(function (result) {
         /* jshint ignore:start */
         res.status(200)
           .json({
             status: 'success',
-            message: `Removed ${result.rowCount} Aluno`
+            message: `Removeu ${result.rowCount} aluno`
         });
         /* jshint ignore:end */
     })
@@ -94,13 +93,13 @@ function removeAluno(req, res, next) {
 
 //Funções da tabela Pai
 function getAllPais(req, res, next) {
-    db.any('select * from Pai')
+    db.any('select * from "Pai"')
       .then(function (data) {
         res.status(200)
           .json({
             status: 'success',
             data: data,
-            message: 'Retrieved ALL Pais'
+            message: 'Recuperou todos os pais'
         });
     })
       .catch(function (err) {
@@ -108,9 +107,40 @@ function getAllPais(req, res, next) {
     });
 }
 
+function getPai(req, res, next) {
+    var AlunoID = parseInt(req.params.id);
+    db.one('select * from "Pai" where id = $1', AlunoID)
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Recuperou um pai'
+        });
+    })
+      .catch(function (err) {
+        return next(err);
+    });
+}
 
+function createPai(req, res, next) {
+  req.body.age = parseInt(req.body.age);
+  db.none('insert into "Pai"("Nome", login, senha)' +
+      'values(${ ${Nome}, ${login}, ${senha})',
+    req.body)
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inseriu um pai'
+      });
+  })
+    .catch(function (err) {
+      return next(err);
+  });
+}
 
-//Export do modulo queries
+//Exportando do modulo queries
 module.exports = {
   getAllAlunos: getAllAlunos,
   getAluno: getAluno,
@@ -118,8 +148,8 @@ module.exports = {
   updateAluno: updateAluno,
   removeAluno: removeAluno,
   getAllPais: getAllPais,
-  //getPai: getPai,
-  //createPai: createPai,
+  getPai: getPai,
+  createPai: createPai,
   //updatePai: updatePai,
   //removePai: removePai,
 };

@@ -18,8 +18,9 @@ router.post('/api/alunos/:id', db.updateAluno);
 router.delete('/api/alunos/:id', db.removeAluno);
 
 router.get('/api/pais', db.getAllPais);
-//router.get('/api/pais/:id', db.getPai);
-//router.post('/api/pais', db.createPai);
+router.get('/api/pais/:id', db.getPai);
+router.post('/api/pais', db.createPai);
 //router.put('/api/pais/:id', db.updatePai);
 //router.delete('/api/pais/:id', db.removePai);
+
 module.exports = router;
