@@ -24,3 +24,9 @@ npm install
 ```shell
 npm install [modulo] --save
 ```
+
+## 4. Configurando o servidor
+Instale e configure o [PostgreSQL](https://www.postgresql.org/download/).
+```shell
+psql -U postgres -f sql/escola.sql
+```
